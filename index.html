@@ -1,0 +1,531 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Income Tax Calculator &amp; Resource Hub – Latest Budget Tax Structure</title>
+  <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500&display=swap" rel="stylesheet" />
+  <style>
+    body {
+      font-family: 'Roboto', sans-serif;
+      background-color: #f5f5f5;
+      margin: 0;
+      padding: 20px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+    .container {
+      background-color: #fff;
+      max-width: 450px;
+      width: 100%;
+      padding: 25px;
+      border-radius: 8px;
+      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+      margin-bottom: 30px;
+    }
+    h1 {
+      font-size: 1.75em;
+      margin-bottom: 5px;
+      color: #1a73e8;
+      font-weight: 500;
+      line-height: 1.2;
+    }
+    .header-container {
+      text-align: center;
+      margin-bottom: 25px;
+      padding-bottom: 20px;
+      border-bottom: 1px solid #eee;
+    }
+    .tax-year {
+      color: #4caf50;
+      font-weight: 500;
+      font-size: 1.1em;
+      margin-bottom: 8px;
+    }
+    .tagline {
+      font-size: 0.9em;
+      color: #666;
+      margin: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+    }
+    .budget-badge {
+      background-color: #e8f0fe;
+      color: #1a73e8;
+      padding: 2px 8px;
+      border-radius: 12px;
+      font-size: 0.9em;
+      font-weight: 500;
+    }
+    p.intro {
+      font-size: 0.95em;
+      color: #666;
+      margin-bottom: 25px;
+    }
+    label {
+      display: block;
+      font-size: 0.95em;
+      color: #444;
+      margin-bottom: 5px;
+    }
+    input {
+      width: 100%;
+      padding: 10px;
+      font-size: 1em;
+      margin-bottom: 15px;
+      border: 1px solid #ccc;
+      border-radius: 4px;
+    }
+    .note {
+      font-size: 0.85em;
+      color: #999;
+      margin-top: -10px;
+      margin-bottom: 15px;
+    }
+    button {
+      width: 100%;
+      padding: 12px;
+      font-size: 1em;
+      border: none;
+      border-radius: 4px;
+      background-color: #4caf50;
+      color: #fff;
+      cursor: pointer;
+      margin-bottom: 20px;
+    }
+    button:hover {
+      background-color: #45a049;
+    }
+    .result {
+      padding: 20px;
+    }
+    .result h2 {
+      margin-bottom: 15px;
+    }
+    .regime-section {
+      margin-bottom: 20px;
+    }
+    .regime-title {
+      font-weight: 500;
+      color: #333;
+      margin-bottom: 10px;
+    }
+    .result p {
+      font-size: 0.95em;
+      margin: 8px 0;
+      color: #555;
+    }
+    .recommendation {
+      font-weight: 500;
+      color: #333;
+    }
+    .error {
+      color: red;
+      font-size: 0.9em;
+      margin-bottom: 15px;
+    }
+    /* Quick Select Container */
+    .quick-select-container {
+      display: flex;
+      overflow-x: auto;
+      gap: 6px;
+      padding: 4px 0;
+      margin: 4px 0 15px 0;
+      scrollbar-width: none;
+      -ms-overflow-style: none;
+      -webkit-overflow-scrolling: touch;
+      scroll-behavior: smooth;
+      flex-wrap: nowrap;
+      width: 100%;
+    }
+    
+    .quick-select-container::-webkit-scrollbar {
+      display: none;
+    }
+
+    .quick-btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      background-color: #f0f0f0;
+      border: none;
+      border-radius: 100px;
+      padding: 4px 12px;
+      cursor: pointer;
+      font-size: 0.85em;
+      white-space: nowrap;
+      color: #666;
+      font-weight: 400;
+      transition: all 0.2s ease;
+      width: fit-content;
+      min-width: min-content;
+      flex: 0 0 auto;
+    }
+
+    .quick-btn:hover {
+      background-color: #e3e3e3;
+      color: #333;
+    }
+
+    .quick-btn.active {
+      background-color: #e8f5e9;
+      color: #2e7d32;
+      font-weight: 500;
+    }
+
+    .quick-btn:active {
+      transform: scale(0.98);
+    }
+
+    /* Make the input container relative for proper spacing */
+    .input-container {
+      position: relative;
+      margin-bottom: 15px;
+    }
+
+    .input-container input {
+      margin-bottom: 4px;
+    }
+
+    .input-container .quick-select-container {
+      position: relative;
+      left: -4px;
+      width: calc(100% + 8px);
+    }
+
+    /* Tax Breakdown Styles */
+    .breakdown-container {
+      margin-top: 15px;
+      font-size: 0.9em;
+    }
+
+    .breakdown-title {
+      font-weight: 500;
+      color: #333;
+      margin-bottom: 8px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .breakdown-toggle {
+      background: none;
+      border: none;
+      color: #1a73e8;
+      cursor: pointer;
+      font-size: 0.9em;
+      padding: 0;
+      margin: 0;
+      display: flex;
+      align-items: center;
+      gap: 4px;
+    }
+
+    .breakdown-toggle:hover {
+      text-decoration: underline;
+    }
+
+    .breakdown-details {
+      background-color: #f8f9fa;
+      border-radius: 4px;
+      padding: 12px;
+      margin-bottom: 12px;
+    }
+
+    .breakdown-row {
+      display: flex;
+      justify-content: space-between;
+      margin-bottom: 6px;
+      color: #555;
+    }
+
+    .breakdown-row.total {
+      font-weight: 500;
+      color: #333;
+      border-top: 1px solid #e0e0e0;
+      margin-top: 8px;
+      padding-top: 8px;
+    }
+
+    .breakdown-row .label {
+      flex: 1;
+    }
+
+    .breakdown-row .amount {
+      text-align: right;
+      font-family: monospace;
+    }
+
+    .collapsed {
+      display: none;
+    }
+
+    /* Resources Section */
+    .resources {
+      background-color: #fff;
+      max-width: 950px;
+      width: 100%;
+      padding: 20px;
+      border-radius: 8px;
+      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+      margin-bottom: 30px;
+    }
+    .resources h2 {
+      font-size: 1.5em;
+      color: #333;
+      margin-bottom: 15px;
+      text-align: center;
+    }
+    .resource-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+      grid-gap: 15px;
+    }
+    .resource-item {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      text-align: center;
+      border: 1px solid #e0e0e0;
+      border-radius: 6px;
+      padding: 10px;
+      background-color: #fafafa;
+      transition: box-shadow 0.3s ease;
+    }
+    .resource-item:hover {
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+    }
+    .resource-item img {
+      width: 60px;
+      height: 60px;
+      object-fit: cover;
+      border-radius: 8px;
+      margin-bottom: 10px;
+      background-color: #f5f5f5;
+      padding: 8px;
+    }
+    .resource-item a {
+      text-decoration: none;
+      color: #1a73e8;
+      font-size: 0.9em;
+      line-height: 1.4;
+      display: -webkit-box;
+      -webkit-line-clamp: 2;
+      -webkit-box-orient: vertical;
+      overflow: hidden;
+      height: 2.8em;
+    }
+    .resource-item a:hover {
+      text-decoration: underline;
+    }
+    .show-more-container {
+      text-align: center;
+      margin: 15px 0;
+      border-top: 1px solid #eee;
+      padding-top: 15px;
+    }
+
+    .show-more-btn {
+      background: none;
+      border: none;
+      color: #1a73e8;
+      font-size: 0.9em;
+      padding: 5px 15px;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      font-weight: 500;
+      transition: color 0.2s;
+    }
+
+    .show-more-btn:hover {
+      color: #1557b0;
+      text-decoration: underline;
+    }
+
+    .show-more-btn::after {
+      content: '▼';
+      font-size: 0.8em;
+      margin-left: 4px;
+      transition: transform 0.2s;
+    }
+
+    .show-more-btn.expanded::after {
+      transform: rotate(180deg);
+    }
+  </style>
+</head>
+<body>
+  <!-- Main Calculator Container -->
+  <div class="container">
+    <div class="header-container">
+      <div class="tax-year">Financial Year 2025-26</div>
+      <h1>Income Tax Calculator</h1>
+      <p class="tagline">
+        Based on <span class="budget-badge">Budget 2025</span> announced on Feb 1, 2025
+      </p>
+    </div>
+
+    <p class="intro">
+      Calculate and compare your tax liability under both the new and old regimes.
+    </p>
+    <!-- Annual Income Input -->
+    <form id="taxForm" onsubmit="event.preventDefault(); calculateTax();">
+      <div class="error" id="errorMsg" style="display: none;"></div>
+      <div class="input-container">
+        <label for="income">Annual Income (₹):</label>
+        <input type="text" id="income" placeholder="e.g., 15,00,000" oninput="checkIncomeThreshold()" required />
+        <!-- Quick Select Buttons (Scrollable) -->
+        <div class="quick-select-container">
+          <button type="button" class="quick-btn" onclick="setIncome(300000)">3L</button>
+          <button type="button" class="quick-btn" onclick="setIncome(600000)">6L</button>
+          <button type="button" class="quick-btn" onclick="setIncome(1200000)">12L</button>
+          <button type="button" class="quick-btn" onclick="setIncome(1500000)">15L</button>
+          <button type="button" class="quick-btn" onclick="setIncome(1800000)">18L</button>
+          <button type="button" class="quick-btn" onclick="setIncome(2000000)">20L</button>
+          <button type="button" class="quick-btn" onclick="setIncome(2500000)">25L</button>
+          <button type="button" class="quick-btn" onclick="setIncome(3000000)">30L</button>
+          <button type="button" class="quick-btn" onclick="setIncome(4000000)">40L</button>
+          <button type="button" class="quick-btn" onclick="setIncome(5000000)">50L</button>
+          <button type="button" class="quick-btn" onclick="setIncome(7500000)">75L</button>
+          <button type="button" class="quick-btn" onclick="setIncome(10000000)">1Cr</button>
+        </div>
+      </div>
+      
+      <!-- Deductions Container (Shown only if Annual Income is 12,00,000 or above) -->
+      <div id="deductionsContainer" style="display: none;">
+        <label for="deductions">Total Deductions (₹):</label>
+        <input type="number" id="deductions" placeholder="e.g., 250000" required />
+        <p class="note" id="deductionNote">* Applicable only under the old tax regime.</p>
+      </div>
+      
+      <button type="button" onclick="calculateTax()">Calculate Tax</button>
+    </form>
+
+    <div id="result" class="result" style="display: none;">
+      <h2>Tax Liability Comparison</h2>
+      
+      <!-- New Regime Section -->
+      <div class="regime-section">
+        <p id="newRegimeTax"></p>
+        <div class="breakdown-container" id="newRegimeBreakdown">
+          <div class="breakdown-details">
+            <div id="newRegimeBreakdownDetails"></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Old Regime Section -->
+      <div class="regime-section">
+        <p id="oldRegimeTax"></p>
+        <div class="breakdown-container" id="oldRegimeBreakdown">
+          <div class="breakdown-title">
+            <button class="breakdown-toggle" onclick="toggleOldRegimeBreakdown()">
+              <span id="oldRegimeToggleText">Show breakdown</span>
+              <span id="oldRegimeToggleIcon">▼</span>
+            </button>
+          </div>
+          <div class="breakdown-details collapsed" id="oldRegimeBreakdownDetails"></div>
+        </div>
+      </div>
+
+      <p class="recommendation" id="recommendation"></p>
+    </div>
+  </div>
+
+  <!-- Resources Section -->
+  <div class="resources">
+    <h2>Trending Articles &amp; Resources on the New Income Tax Changes</h2>
+    <div class="resource-grid" id="initialArticles">
+      <!-- Custom Blog Post -->
+      <div class="resource-item">
+        <img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%234285f4'%3E%3Cpath d='M19 5v14H5V5h14m0-2H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm-5 14H7v-2h7v2zm3-4H7v-2h10v2zm0-4H7V7h10v2z'/%3E%3C/svg%3E" alt="Tax Guide Blog">
+        <a href="blog.html">
+          Complete Guide: Understanding the New Tax Structure 2025
+        </a>
+      </div>
+      <!-- Indian News Articles First -->
+      <div class="resource-item">
+        <img src="https://www.thehindu.com/theme/images/th-online/og-image.png" alt="The Hindu" onerror="this.onerror=null; this.src='data:image/svg+xml,%3Csvg xmlns=\'http://www.w3.org/2000/svg\' viewBox=\'0 0 24 24\' fill=\'%23000000\'%3E%3Cpath d=\'M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-1 17.93c-3.95-.49-7-3.85-7-7.93 0-.62.08-1.21.21-1.79L9 15v1c0 1.1.9 2 2 2v1.93zm6.9-2.54c-.26-.81-1-1.39-1.9-1.39h-1v-3c0-.55-.45-1-1-1H8v-2h2c.55 0 1-.45 1-1V7h2c1.1 0 2-.9 2-2v-.41c2.93 1.19 5 4.06 5 7.41 0 2.08-.8 3.97-2.1 5.39z\'/%3E%3C/svg%3E';">
+        <a href="https://www.thehindu.com/business/india-budget-new-tax-slabs" target="_blank">
+          The Hindu: Impact on the Middle Class
+        </a>
+      </div>
+      <div class="resource-item">
+        <img src="https://static.toiimg.com/photo/msid-58124960/58124960.jpg" alt="Times of India" onerror="this.onerror=null; this.src='data:image/svg+xml,%3Csvg xmlns=\'http://www.w3.org/2000/svg\' viewBox=\'0 0 24 24\' fill=\'%23000000\'%3E%3Cpath d=\'M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-1 17.93c-3.95-.49-7-3.85-7-7.93 0-.62.08-1.21.21-1.79L9 15v1c0 1.1.9 2 2 2v1.93zm6.9-2.54c-.26-.81-1-1.39-1.9-1.39h-1v-3c0-.55-.45-1-1-1H8v-2h2c.55 0 1-.45 1-1V7h2c1.1 0 2-.9 2-2v-.41c2.93 1.19 5 4.06 5 7.41 0 2.08-.8 3.97-2.1 5.39z\'/%3E%3C/svg%3E';">
+        <a href="https://timesofindia.indiatimes.com/india/budget-2025-income-tax-changes" target="_blank">
+          Times of India: Budget 2025 – What You Need to Know
+        </a>
+      </div>
+      <div class="resource-item">
+        <img src="https://economictimes.indiatimes.com/photo/47529300.cms" alt="Economic Times" onerror="this.onerror=null; this.src='data:image/svg+xml,%3Csvg xmlns=\'http://www.w3.org/2000/svg\' viewBox=\'0 0 24 24\' fill=\'%23000000\'%3E%3Cpath d=\'M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-1 17.93c-3.95-.49-7-3.85-7-7.93 0-.62.08-1.21.21-1.79L9 15v1c0 1.1.9 2 2 2v1.93zm6.9-2.54c-.26-.81-1-1.39-1.9-1.39h-1v-3c0-.55-.45-1-1-1H8v-2h2c.55 0 1-.45 1-1V7h2c1.1 0 2-.9 2-2v-.41c2.93 1.19 5 4.06 5 7.41 0 2.08-.8 3.97-2.1 5.39z\'/%3E%3C/svg%3E';">
+        <a href="https://economictimes.indiatimes.com/wealth/income-tax-new-rates-impact-on-salary" target="_blank">
+          Economic Times: Impact on Your Take-Home Salary
+        </a>
+      </div>
+      <div class="resource-item">
+        <img src="https://bsmedia.business-standard.com/_media/bs/img/article/2020-12/27/full/1609102714-1909.jpg" alt="Business Standard" onerror="this.onerror=null; this.src='data:image/svg+xml,%3Csvg xmlns=\'http://www.w3.org/2000/svg\' viewBox=\'0 0 24 24\' fill=\'%23000000\'%3E%3Cpath d=\'M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-1 17.93c-3.95-.49-7-3.85-7-7.93 0-.62.08-1.21.21-1.79L9 15v1c0 1.1.9 2 2 2v1.93zm6.9-2.54c-.26-.81-1-1.39-1.9-1.39h-1v-3c0-.55-.45-1-1-1H8v-2h2c.55 0 1-.45 1-1V7h2c1.1 0 2-.9 2-2v-.41c2.93 1.19 5 4.06 5 7.41 0 2.08-.8 3.97-2.1 5.39z\'/%3E%3C/svg%3E';">
+        <a href="https://www.business-standard.com/article/budget/budget-2025-how-tax-cuts-affect-salaried-individuals" target="_blank">
+          Business Standard: Impact on Salaried Individuals
+        </a>
+      </div>
+    </div>
+
+    <!-- Show More Button -->
+    <div class="show-more-container">
+      <button id="showMoreBtn" class="show-more-btn" onclick="toggleAdditionalArticles()">View more articles</button>
+    </div>
+
+    <!-- Additional Articles (Initially Hidden) -->
+    <div class="resource-grid" id="additionalArticles" style="display: none;">
+      <div class="resource-item">
+        <img src="https://www.livemint.com/lm-img/mint-logo.png" alt="Mint" onerror="this.onerror=null; this.src='data:image/svg+xml,%3Csvg xmlns=\'http://www.w3.org/2000/svg\' viewBox=\'0 0 24 24\' fill=\'%23000000\'%3E%3Cpath d=\'M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-1 17.93c-3.95-.49-7-3.85-7-7.93 0-.62.08-1.21.21-1.79L9 15v1c0 1.1.9 2 2 2v1.93zm6.9-2.54c-.26-.81-1-1.39-1.9-1.39h-1v-3c0-.55-.45-1-1-1H8v-2h2c.55 0 1-.45 1-1V7h2c1.1 0 2-.9 2-2v-.41c2.93 1.19 5 4.06 5 7.41 0 2.08-.8 3.97-2.1 5.39z\'/%3E%3C/svg%3E';">
+        <a href="https://www.livemint.com/budget/2025/new-tax-regime-benefits-for-taxpayers" target="_blank">
+          Mint: Benefits for Indian Taxpayers
+        </a>
+      </div>
+      <div class="resource-item">
+        <img src="https://www.ndtv.com/common/images/ogndtv.png" alt="NDTV" onerror="this.onerror=null; this.src='data:image/svg+xml,%3Csvg xmlns=\'http://www.w3.org/2000/svg\' viewBox=\'0 0 24 24\' fill=\'%23000000\'%3E%3Cpath d=\'M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-1 17.93c-3.95-.49-7-3.85-7-7.93 0-.62.08-1.21.21-1.79L9 15v1c0 1.1.9 2 2 2v1.93zm6.9-2.54c-.26-.81-1-1.39-1.9-1.39h-1v-3c0-.55-.45-1-1-1H8v-2h2c.55 0 1-.45 1-1V7h2c1.1 0 2-.9 2-2v-.41c2.93 1.19 5 4.06 5 7.41 0 2.08-.8 3.97-2.1 5.39z\'/%3E%3C/svg%3E';">
+        <a href="https://www.ndtv.com/business/income-tax-calculator-new-vs-old-regime-2025" target="_blank">
+          NDTV: Simplified Tax Calculation Explained
+        </a>
+      </div>
+      <div class="resource-item">
+        <img src="https://www.hindustantimes.com/images/app-images/ht/og-image.png" alt="Hindustan Times" onerror="this.onerror=null; this.src='data:image/svg+xml,%3Csvg xmlns=\'http://www.w3.org/2000/svg\' viewBox=\'0 0 24 24\' fill=\'%23000000\'%3E%3Cpath d=\'M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-1 17.93c-3.95-.49-7-3.85-7-7.93 0-.62.08-1.21.21-1.79L9 15v1c0 1.1.9 2 2 2v1.93zm6.9-2.54c-.26-.81-1-1.39-1.9-1.39h-1v-3c0-.55-.45-1-1-1H8v-2h2c.55 0 1-.45 1-1V7h2c1.1 0 2-.9 2-2v-.41c2.93 1.19 5 4.06 5 7.41 0 2.08-.8 3.97-2.1 5.39z\'/%3E%3C/svg%3E';">
+        <a href="https://www.hindustantimes.com/india-news/2025-budget-new-tax-regime-guide" target="_blank">
+          Hindustan Times: Detailed Guide to the New Regime
+        </a>
+      </div>
+      <!-- International News at the bottom -->
+      <div class="resource-item">
+        <img src="https://www.reuters.com/pf/resources/images/reuters/reuters-default.png?d=127" alt="Reuters" onerror="this.onerror=null; this.src='data:image/svg+xml,%3Csvg xmlns=\'http://www.w3.org/2000/svg\' viewBox=\'0 0 24 24\' fill=\'%23000000\'%3E%3Cpath d=\'M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-1 17.93c-3.95-.49-7-3.85-7-7.93 0-.62.08-1.21.21-1.79L9 15v1c0 1.1.9 2 2 2v1.93zm6.9-2.54c-.26-.81-1-1.39-1.9-1.39h-1v-3c0-.55-.45-1-1-1H8v-2h2c.55 0 1-.45 1-1V7h2c1.1 0 2-.9 2-2v-.41c2.93 1.19 5 4.06 5 7.41 0 2.08-.8 3.97-2.1 5.39z\'/%3E%3C/svg%3E';">
+        <a href="https://www.reuters.com/world/india/new-tax-slabs-2025-budget" target="_blank">
+          Reuters: New Income Tax Slabs Announced in 2025 Budget
+        </a>
+      </div>
+    </div>
+  </div>
+
+  <script src="tax-calculator.js"></script>
+  <script>
+    function toggleAdditionalArticles() {
+      const additionalArticles = document.getElementById('additionalArticles');
+      const showMoreBtn = document.getElementById('showMoreBtn');
+      
+      if (additionalArticles.style.display === 'none') {
+        additionalArticles.style.display = 'grid';
+        showMoreBtn.textContent = 'Show fewer articles';
+        showMoreBtn.classList.add('expanded');
+      } else {
+        additionalArticles.style.display = 'none';
+        showMoreBtn.textContent = 'View more articles';
+        showMoreBtn.classList.remove('expanded');
+      }
+    }
+  </script>
+</body>
+</html>
