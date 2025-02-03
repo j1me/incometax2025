@@ -14,14 +14,14 @@
   <meta property="og:url" content="https://github.com/j1me/incometax2025">
   <meta property="og:title" content="Income Tax Calculator 2025-26 – Compare Old vs New Tax Regimes">
   <meta property="og:description" content="Calculate and compare your income tax under both old and new regimes for FY 2025-26. Get detailed breakdown and smart recommendations based on the latest budget.">
-  <meta property="og:image" content="https://raw.githubusercontent.com/j1me/incometax2025/main/images/tax-calculator-social.png">
+  <meta property="og:image" content="https://raw.githubusercontent.com/j1me/incometax2025/main/tax-calculator-social.png">
 
   <!-- Twitter -->
   <meta property="twitter:card" content="summary_large_image">
   <meta property="twitter:url" content="https://github.com/j1me/incometax2025">
   <meta property="twitter:title" content="Income Tax Calculator 2025-26 – Compare Old vs New Tax Regimes">
   <meta property="twitter:description" content="Calculate and compare your income tax under both old and new regimes for FY 2025-26. Get detailed breakdown and smart recommendations based on the latest budget.">
-  <meta property="twitter:image" content="https://raw.githubusercontent.com/j1me/incometax2025/main/images/tax-calculator-social.png">
+  <meta property="twitter:image" content="https://raw.githubusercontent.com/j1me/incometax2025/main/tax-calculator-social.png">
 
   <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500&display=swap" rel="stylesheet" />
   <style>
@@ -376,12 +376,73 @@
     .show-more-btn.expanded::after {
       transform: rotate(180deg);
     }
+
+    /* Add these styles before the closing </style> tag */
+    .share-button {
+      position: absolute;
+      top: 20px;
+      right: 20px;
+      background: none;
+      border: none;
+      color: #1a73e8;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 0.9em;
+      padding: 8px 12px;
+      border-radius: 20px;
+      transition: background-color 0.2s;
+    }
+
+    .share-button:hover {
+      background-color: #f0f7ff;
+    }
+
+    .share-button svg {
+      width: 18px;
+      height: 18px;
+      fill: currentColor;
+    }
+
+    .share-toast {
+      position: fixed;
+      bottom: 20px;
+      left: 50%;
+      transform: translateX(-50%);
+      background-color: #323232;
+      color: white;
+      padding: 12px 24px;
+      border-radius: 4px;
+      font-size: 0.9em;
+      opacity: 0;
+      transition: opacity 0.3s;
+      pointer-events: none;
+      z-index: 1000;
+    }
+
+    .share-toast.show {
+      opacity: 1;
+    }
+
+    @media (max-width: 600px) {
+      .share-button {
+        top: 15px;
+        right: 15px;
+      }
+    }
   </style>
 </head>
 <body>
   <!-- Main Calculator Container -->
   <div class="container">
     <div class="header-container">
+      <button onclick="sharePage()" class="share-button" title="Share this calculator">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+          <path d="M18 16.08c-.76 0-1.44.3-1.96.77L8.91 12.7c.05-.23.09-.46.09-.7s-.04-.47-.09-.7l7.05-4.11c.54.5 1.25.81 2.04.81 1.66 0 3-1.34 3-3s-1.34-3-3-3-3 1.34-3 3c0 .24.04.47.09.7L8.04 9.81C7.5 9.31 6.79 9 6 9c-1.66 0-3 1.34-3 3s1.34 3 3 3c.79 0 1.5-.31 2.04-.81l7.12 4.16c-.05.21-.08.43-.08.65 0 1.61 1.31 2.92 2.92 2.92s2.92-1.31 2.92-2.92c0-1.61-1.31-2.92-2.92-2.92zM18 4c.55 0 1 .45 1 1s-.45 1-1 1-1-.45-1-1 .45-1 1-1zM6 13c-.55 0-1-.45-1-1s.45-1 1-1 1 .45 1 1-.45 1-1 1zm12 7.02c-.55 0-1-.45-1-1s.45-1 1-1 1 .45 1 1-.45 1-1 1z"/>
+        </svg>
+        <span class="share-text">Share</span>
+      </button>
       <div class="tax-year">Financial Year 2025-26</div>
       <h1>Income Tax Calculator</h1>
       <p class="tagline">
@@ -529,6 +590,9 @@
     </div>
   </div>
 
+  <!-- Add toast notification div -->
+  <div id="shareToast" class="share-toast">Link copied to clipboard!</div>
+
   <script src="tax-calculator.js"></script>
   <script>
     function toggleAdditionalArticles() {
@@ -543,6 +607,35 @@
         additionalArticles.style.display = 'none';
         showMoreBtn.textContent = 'View more articles';
         showMoreBtn.classList.remove('expanded');
+      }
+    }
+
+    async function sharePage() {
+      const shareData = {
+        title: 'Income Tax Calculator 2025-26',
+        text: 'Calculate and compare your income tax under both old and new regimes for FY 2025-26',
+        url: window.location.href
+      };
+
+      // Check if the Web Share API is supported (mainly mobile devices)
+      if (navigator.share) {
+        try {
+          await navigator.share(shareData);
+        } catch (err) {
+          console.log('Error sharing:', err);
+        }
+      } else {
+        // Fallback for desktop: Copy to clipboard
+        try {
+          await navigator.clipboard.writeText(window.location.href);
+          const toast = document.getElementById('shareToast');
+          toast.classList.add('show');
+          setTimeout(() => {
+            toast.classList.remove('show');
+          }, 2000);
+        } catch (err) {
+          console.log('Error copying to clipboard:', err);
+        }
       }
     }
   </script>
