@@ -97,7 +97,8 @@ function checkIncomeThreshold() {
   const deductionsContainer = document.getElementById('deductionsContainer');
   const deductionsInput = document.getElementById('deductions');
   
-  if (incomeVal < 1200000) {
+  // Hide deductions for income up to 12.75 lakhs (12 lakhs + 75k standard deduction)
+  if (incomeVal <= 1275000) {
     deductionsContainer.style.display = 'none';
     deductionsInput.value = '';
     updateClearButton(deductionsInput);
@@ -327,6 +328,100 @@ function calculateTax() {
     const { tax: taxOld, breakdown: breakdownOld } = calculateOldRegimeTax(income, deductions);
 
     // Display results
+    const resultDiv = document.getElementById('result');
+    resultDiv.style.display = 'block';
+
+    // Special handling for tax-free income (up to 12 lakhs)
+    if (income <= 1200000) {
+      // Show cheerful message
+      resultDiv.innerHTML = `
+        <div style="text-align: center; padding: 30px 20px; background-color: #e8f5e9; border-radius: 8px; margin-bottom: 20px;">
+          <h2 style="color: #2e7d32; margin-bottom: 15px;">🎉 Good News!</h2>
+          <p style="font-size: 1.1em; color: #1b5e20; margin-bottom: 10px;">
+            Your income of ₹${formatNumberWithCommas(income)} is completely tax-free under the new regime!
+          </p>
+          <p style="color: #388e3c; font-size: 0.95em;">
+            As per Budget 2023, there is no tax liability for income up to ₹12,00,000 under the new tax regime.
+          </p>
+        </div>
+
+        <!-- Bottom Share Button -->
+        <div class="bottom-share">
+          <button onclick="showShareMenu(event, true)" class="bottom-share-button">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+              <path d="M18 16.08c-.76 0-1.44.3-1.96.77L8.91 12.7c.05-.23.09-.46.09-.7s-.04-.47-.09-.7l7.05-4.11c.54.5 1.25.81 2.04.81 1.66 0 3-1.34 3-3s-1.34-3-3-3-3 1.34-3 3c0 .24.04.47.09.7L8.04 9.81C7.5 9.31 6.79 9 6 9c-1.66 0-3 1.34-3 3s1.34 3 3 3c.79 0 1.5-.31 2.04-.81l7.12 4.16c-.05.21-.08.43-.08.65 0 1.61 1.31 2.92 2.92 2.92s2.92-1.31 2.92-2.92c0-1.61-1.31-2.92-2.92-2.92z"/>
+            </svg>
+            Share These Results
+          </button>
+          <button onclick="downloadCalculation()" class="bottom-share-button download-button">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+              <path d="M19 9h-4V3H9v6H5l7 7 7-7zM5 18v2h14v-2H5z"/>
+            </svg>
+            Download Calculation
+          </button>
+        </div>
+      `;
+      return;
+    }
+
+    // For income above 12 lakhs, show the regular tax comparison
+    resultDiv.innerHTML = `
+      <!-- New Tax Summary Section -->
+      <div class="tax-summary">
+        <div class="tax-box new-regime">
+          <div class="regime-label">New Regime</div>
+          <div class="tax-label">Tax Amount</div>
+          <div class="tax-amount" id="newRegimeTax"></div>
+          <div class="effective-rate" id="newRegimeRate"></div>
+        </div>
+        <div class="tax-box old-regime">
+          <div class="regime-label">Old Regime</div>
+          <div class="tax-label">Tax Amount</div>
+          <div class="tax-amount" id="oldRegimeTax"></div>
+          <div class="effective-rate" id="oldRegimeRate"></div>
+        </div>
+      </div>
+      
+      <!-- Recommendation -->
+      <p class="recommendation" id="recommendation"></p>
+      
+      <h2>Tax Liability Comparison</h2>
+      
+      <!-- New Regime Section -->
+      <div class="regime-section">
+        <h3 class="regime-title">New Tax Regime Breakdown</h3>
+        <div class="breakdown-container" id="newRegimeBreakdown">
+          <div class="breakdown-details">
+            <div id="newRegimeBreakdownDetails"></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Old Regime Section -->
+      <div class="regime-section">
+        <h3 class="regime-title">Old Tax Regime Breakdown</h3>
+        <div class="breakdown-container" id="oldRegimeBreakdown">
+          <div class="breakdown-details" id="oldRegimeBreakdownDetails"></div>
+        </div>
+      </div>
+
+      <!-- Bottom Share Button -->
+      <div class="bottom-share">
+        <button onclick="showShareMenu(event, true)" class="bottom-share-button">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+            <path d="M18 16.08c-.76 0-1.44.3-1.96.77L8.91 12.7c.05-.23.09-.46.09-.7s-.04-.47-.09-.7l7.05-4.11c.54.5 1.25.81 2.04.81 1.66 0 3-1.34 3-3s-1.34-3-3-3-3 1.34-3 3c0 .24.04.47.09.7L8.04 9.81C7.5 9.31 6.79 9 6 9c-1.66 0-3 1.34-3 3s1.34 3 3 3c.79 0 1.5-.31 2.04-.81l7.12 4.16c-.05.21-.08.43-.08.65 0 1.61 1.31 2.92 2.92 2.92s2.92-1.31 2.92-2.92c0-1.61-1.31-2.92-2.92-2.92z"/>
+          </svg>
+          Share These Results
+        </button>
+        <button onclick="downloadCalculation()" class="bottom-share-button download-button">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+            <path d="M19 9h-4V3H9v6H5l7 7 7-7zM5 18v2h14v-2H5z"/>
+          </svg>
+          Download Calculation
+        </button>
+      </div>
+    `;
+
     const newRegimeTax = document.getElementById('newRegimeTax');
     const oldRegimeTax = document.getElementById('oldRegimeTax');
     const newRegimeBox = newRegimeTax.closest('.tax-box');
@@ -348,16 +443,6 @@ function calculateTax() {
     
     document.getElementById('newRegimeRate').innerHTML = `Effective Rate: ${effectiveRateNew.toFixed(1)}%`;
     document.getElementById('oldRegimeRate').innerHTML = `Effective Rate: ${effectiveRateOld.toFixed(1)}%`;
-
-    // Show/hide download button based on input
-    const downloadButtons = document.querySelectorAll('.download-button');
-    downloadButtons.forEach(button => {
-      if (income > 0) {
-        button.style.display = 'flex';
-      } else {
-        button.style.display = 'none';
-      }
-    });
 
     // Highlight better option
     const recommendationElem = document.getElementById('recommendation');
@@ -389,9 +474,6 @@ function calculateTax() {
     if (income >= 1200000) {
       updateBreakEvenHint(income);
     }
-
-    // Show results after calculation
-    document.getElementById('result').style.display = 'block';
   } catch (error) {
     displayError(error.message);
   }
@@ -472,4 +554,149 @@ document.addEventListener('DOMContentLoaded', function() {
   deductionsInput.addEventListener('input', function() {
     handleDeductionsChange(this);
   });
-}); 
+});
+
+function downloadCalculation() {
+  const income = document.getElementById('income').value;
+  const deductions = document.getElementById('deductions').value;
+  
+  if (!income) {
+    const toast = document.getElementById('shareToast');
+    toast.textContent = 'Please enter income to download calculation';
+    toast.classList.add('show');
+    setTimeout(() => {
+      toast.classList.remove('show');
+    }, 2000);
+    return;
+  }
+
+  // Get tax calculations
+  const incomeValue = parseNumberWithCommas(income);
+  const { tax: taxNew, breakdown: breakdownNew } = calculateNewRegimeTax(incomeValue);
+  const { tax: taxOld, breakdown: breakdownOld } = calculateOldRegimeTax(incomeValue, parseNumberWithCommas(deductions || '0'));
+
+  // Create PDF
+  const { jsPDF } = window.jspdf;
+  const doc = new jsPDF();
+  
+  // Set font
+  doc.setFont("helvetica");
+  
+  // Add title
+  doc.setFontSize(16);
+  doc.text("Income Tax Calculation (FY 2025-26)", 15, 20);
+  
+  // Add basic info
+  doc.setFontSize(12);
+  doc.text(`Annual Income: ₹${income}`, 15, 35);
+  if (deductions) {
+    doc.text(`Total Deductions: ₹${deductions}`, 15, 45);
+  }
+
+  // Special handling for tax-free income
+  if (incomeValue <= 1200000) {
+    doc.setFontSize(14);
+    doc.setTextColor(46, 125, 50); // Green color
+    doc.text("🎉 Good News!", 15, 60);
+    doc.text("Your income is completely tax-free under the new regime!", 15, 70);
+    doc.setFontSize(10);
+    doc.text("As per Budget 2023, there is no tax liability for income up to ₹12,00,000 under the new tax regime.", 15, 80);
+    doc.setTextColor(0, 0, 0); // Reset to black
+    
+    // Add footer
+    doc.setFontSize(8);
+    doc.text(
+      `Generated on ${new Date().toLocaleDateString()}`,
+      15,
+      doc.internal.pageSize.height - 10
+    );
+    doc.text(
+      `Page 1 of 1`,
+      doc.internal.pageSize.width - 30,
+      doc.internal.pageSize.height - 10
+    );
+
+    // Save the PDF
+    doc.save('tax-calculation.pdf');
+
+    // Show toast
+    const toast = document.getElementById('shareToast');
+    toast.textContent = 'Tax calculation downloaded as PDF!';
+    toast.classList.add('show');
+    setTimeout(() => {
+      toast.classList.remove('show');
+    }, 2000);
+    return;
+  }
+
+  // Add tax comparison
+  doc.setFontSize(14);
+  doc.text("Tax Comparison", 15, 70);
+  doc.setFontSize(12);
+  doc.text(`New Regime Tax: ₹${formatNumberWithCommas(taxNew)}`, 15, 80);
+  doc.text(`Old Regime Tax: ₹${formatNumberWithCommas(taxOld)}`, 15, 90);
+
+  // Add recommendation
+  let recommendation = '';
+  if (taxNew < taxOld) {
+    recommendation = `Recommendation: Choose the New Tax Regime (Save ₹${formatNumberWithCommas(taxOld - taxNew)} annually)`;
+  } else if (taxOld < taxNew) {
+    recommendation = `Recommendation: Choose the Old Tax Regime (Save ₹${formatNumberWithCommas(taxNew - taxOld)} annually)`;
+  } else {
+    recommendation = "Note: Both tax regimes result in the same tax liability";
+  }
+  doc.text(recommendation, 15, 100);
+
+  // Add breakdowns
+  doc.setFontSize(14);
+  doc.text("New Regime Breakdown:", 15, 120);
+  let yPos = 130;
+  breakdownNew.forEach(item => {
+    doc.setFontSize(10);
+    doc.text(`${item.label}: ₹${formatNumberWithCommas(item.amount)}`, 20, yPos);
+    yPos += 8;
+  });
+
+  // Check if we need a new page for old regime breakdown
+  if (yPos > 250) {
+    doc.addPage();
+    yPos = 20;
+  }
+
+  doc.setFontSize(14);
+  doc.text("Old Regime Breakdown:", 15, yPos + 10);
+  yPos += 20;
+  breakdownOld.forEach(item => {
+    doc.setFontSize(10);
+    doc.text(`${item.label}: ₹${formatNumberWithCommas(item.amount)}`, 20, yPos);
+    yPos += 8;
+  });
+
+  // Add footer
+  doc.setFontSize(8);
+  const pageCount = doc.internal.getNumberOfPages();
+  for (let i = 1; i <= pageCount; i++) {
+    doc.setPage(i);
+    doc.text(
+      `Generated on ${new Date().toLocaleDateString()}`,
+      15,
+      doc.internal.pageSize.height - 10
+    );
+    doc.text(
+      `Page ${i} of ${pageCount}`,
+      doc.internal.pageSize.width - 30,
+      doc.internal.pageSize.height - 10
+    );
+  }
+
+  // Save the PDF
+  doc.save('tax-calculation.pdf');
+
+  // Show toast
+  const toast = document.getElementById('shareToast');
+  toast.textContent = 'Tax calculation downloaded as PDF!';
+  toast.classList.add('show');
+  setTimeout(() => {
+    toast.classList.remove('show');
+  }, 2000);
+} 
