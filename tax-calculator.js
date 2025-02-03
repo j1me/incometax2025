@@ -341,7 +341,7 @@ function calculateTax() {
             Your income of ₹${formatNumberWithCommas(income)} is completely tax-free under the new regime!
           </p>
           <p style="color: #388e3c; font-size: 0.95em;">
-            As per Budget 2023, there is no tax liability for income up to ₹12,00,000 under the new tax regime.
+            As per Budget 2025, there is no tax liability for income up to ₹12,00,000 under the new tax regime.
           </p>
         </div>
 
@@ -600,7 +600,7 @@ function downloadCalculation() {
     doc.text("🎉 Good News!", 15, 60);
     doc.text("Your income is completely tax-free under the new regime!", 15, 70);
     doc.setFontSize(10);
-    doc.text("As per Budget 2023, there is no tax liability for income up to ₹12,00,000 under the new tax regime.", 15, 80);
+    doc.text("As per Budget 2025, there is no tax liability for income up to ₹12,00,000 under the new tax regime.", 15, 80);
     doc.setTextColor(0, 0, 0); // Reset to black
     
     // Add footer
