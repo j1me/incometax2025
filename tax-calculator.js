@@ -24,11 +24,41 @@ function parseNumberWithCommas(str) {
   return parseFloat(str.replace(/,/g, '')) || 0;
 }
 
+// Add debounce function for performance
+function debounce(func, wait) {
+  let timeout;
+  return function executedFunction(...args) {
+    const later = () => {
+      clearTimeout(timeout);
+      func(...args);
+    };
+    clearTimeout(timeout);
+    timeout = setTimeout(later, wait);
+  };
+}
+
+// Handle income input changes
+function handleIncomeChange(input) {
+  formatInputValue(input);
+  updateClearButton(input);
+  checkIncomeThreshold();
+  debouncedCalculateTax();
+}
+
+// Handle deductions input changes
+function handleDeductionsChange(input) {
+  formatInputValue(input);
+  updateClearButton(input);
+  debouncedCalculateTax();
+}
+
 // Quick select button handler
 function setIncome(value) {
   const incomeInput = document.getElementById('income');
   incomeInput.value = formatNumberWithCommas(value);
+  updateClearButton(incomeInput);
   checkIncomeThreshold();
+  calculateTax(); // Immediate calculation for button clicks
 }
 
 // Format input value with commas as user types
@@ -40,13 +70,24 @@ function formatInputValue(input) {
   // Remove non-digit characters and format
   let value = input.value.replace(/[^\d]/g, '');
   value = parseInt(value) || 0;
-  const formattedValue = formatNumberWithCommas(value);
+  
+  // Only show formatted value if it's not zero
+  const formattedValue = value === 0 ? '' : formatNumberWithCommas(value);
   input.value = formattedValue;
 
   // Adjust cursor position based on added commas
-  const lengthDiff = formattedValue.length - originalLength;
-  const newPosition = cursorPosition + lengthDiff;
-  input.setSelectionRange(newPosition, newPosition);
+  if (formattedValue) {
+    const lengthDiff = formattedValue.length - originalLength;
+    const newPosition = cursorPosition + lengthDiff;
+    input.setSelectionRange(newPosition, newPosition);
+  }
+}
+
+function updateClearButton(input) {
+  const clearButton = document.getElementById(`clear${input.id.charAt(0).toUpperCase() + input.id.slice(1)}`);
+  // Only show clear button if input has a non-zero value
+  const value = input.value.trim();
+  clearButton.style.display = (value && value !== '0') ? 'flex' : 'none';
 }
 
 // Toggle deductions field visibility based on income
@@ -58,12 +99,16 @@ function checkIncomeThreshold() {
   
   if (incomeVal < 1200000) {
     deductionsContainer.style.display = 'none';
-    deductionsInput.value = ''; // Clear deductions when hidden
+    deductionsInput.value = '';
+    updateClearButton(deductionsInput);
+    calculateTax(); // Recalculate when deductions are reset
   } else {
     deductionsContainer.style.display = 'block';
     if (!deductionsInput.value) {
-      deductionsInput.value = '0'; // Set default value
+      deductionsInput.value = '';
+      updateClearButton(deductionsInput);
     }
+    updateBreakEvenHint(incomeVal);
   }
 }
 
@@ -254,32 +299,26 @@ function renderBreakdown(breakdown, containerId) {
   container.innerHTML = html;
 }
 
-function toggleOldRegimeBreakdown() {
-  const details = document.getElementById('oldRegimeBreakdownDetails');
-  const toggleText = document.getElementById('oldRegimeToggleText');
-  const toggleIcon = document.getElementById('oldRegimeToggleIcon');
-  
-  if (details.classList.contains('collapsed')) {
-    details.classList.remove('collapsed');
-    toggleText.textContent = 'Hide breakdown';
-    toggleIcon.textContent = '▲';
-  } else {
-    details.classList.add('collapsed');
-    toggleText.textContent = 'Show breakdown';
-    toggleIcon.textContent = '▼';
-  }
-}
+// Create debounced version of calculateTax
+const debouncedCalculateTax = debounce(() => {
+  calculateTax();
+}, 300);
 
 // Main calculation function
 function calculateTax() {
   try {
-    // Clear previous results and errors
+    // Clear previous errors
     document.getElementById('errorMsg').style.display = 'none';
-    document.getElementById('result').style.display = 'none';
 
     // Get and validate inputs
     const income = parseNumberWithCommas(document.getElementById('income').value);
-    const deductions = parseNumberWithCommas(document.getElementById('deductions').value);
+    const deductions = parseNumberWithCommas(document.getElementById('deductions').value || '0');
+
+    // Don't show results for empty input
+    if (!income) {
+      document.getElementById('result').style.display = 'none';
+      return;
+    }
 
     validateInputs(income, deductions);
 
@@ -288,25 +327,50 @@ function calculateTax() {
     const { tax: taxOld, breakdown: breakdownOld } = calculateOldRegimeTax(income, deductions);
 
     // Display results
-    document.getElementById('newRegimeTax').innerHTML = `
-      <strong>New Regime Tax:</strong> ${formatCurrency(taxNew)}
-    `;
+    const newRegimeTax = document.getElementById('newRegimeTax');
+    const oldRegimeTax = document.getElementById('oldRegimeTax');
+    const newRegimeBox = newRegimeTax.closest('.tax-box');
+    const oldRegimeBox = oldRegimeTax.closest('.tax-box');
 
-    document.getElementById('oldRegimeTax').innerHTML = `
-      <strong>Old Regime Tax:</strong> ${formatCurrency(taxOld)}
-    `;
+    // Reset classes
+    newRegimeBox.classList.remove('highlighted');
+    oldRegimeBox.classList.remove('highlighted');
+    newRegimeTax.classList.remove('better');
+    oldRegimeTax.classList.remove('better');
 
-    // Render breakdowns
-    renderBreakdown(breakdownNew, 'newRegimeBreakdownDetails');
-    renderBreakdown(breakdownOld, 'oldRegimeBreakdownDetails');
+    // Display tax amounts
+    newRegimeTax.innerHTML = formatCurrency(taxNew);
+    oldRegimeTax.innerHTML = formatCurrency(taxOld);
 
+    // Calculate and display effective tax rates
+    const effectiveRateNew = (taxNew / income) * 100;
+    const effectiveRateOld = (taxOld / income) * 100;
+    
+    document.getElementById('newRegimeRate').innerHTML = `Effective Rate: ${effectiveRateNew.toFixed(1)}%`;
+    document.getElementById('oldRegimeRate').innerHTML = `Effective Rate: ${effectiveRateOld.toFixed(1)}%`;
+
+    // Show/hide download button based on input
+    const downloadButtons = document.querySelectorAll('.download-button');
+    downloadButtons.forEach(button => {
+      if (income > 0) {
+        button.style.display = 'flex';
+      } else {
+        button.style.display = 'none';
+      }
+    });
+
+    // Highlight better option
     const recommendationElem = document.getElementById('recommendation');
     if (taxNew < taxOld) {
+      newRegimeBox.classList.add('highlighted');
+      newRegimeTax.classList.add('better');
       recommendationElem.innerHTML = `
         <strong>💡 Recommendation:</strong> Choose the <span style="color: #4caf50">New Tax Regime</span><br>
         <small>You save ${formatCurrency(taxOld - taxNew)} annually</small>
       `;
     } else if (taxOld < taxNew) {
+      oldRegimeBox.classList.add('highlighted');
+      oldRegimeTax.classList.add('better');
       recommendationElem.innerHTML = `
         <strong>💡 Recommendation:</strong> Choose the <span style="color: #4caf50">Old Tax Regime</span><br>
         <small>You save ${formatCurrency(taxNew - taxOld)} annually</small>
@@ -315,6 +379,15 @@ function calculateTax() {
       recommendationElem.innerHTML = `
         <strong>💡 Note:</strong> Both tax regimes result in the same tax liability
       `;
+    }
+
+    // Render breakdowns
+    renderBreakdown(breakdownNew, 'newRegimeBreakdownDetails');
+    renderBreakdown(breakdownOld, 'oldRegimeBreakdownDetails');
+
+    // Update break-even hint after tax calculation
+    if (income >= 1200000) {
+      updateBreakEvenHint(income);
     }
 
     // Show results after calculation
@@ -332,17 +405,71 @@ function displayError(message) {
   document.getElementById('result').style.display = 'none';
 }
 
+// Calculate break-even deductions
+function calculateBreakEvenDeductions(income) {
+  // Binary search to find break-even point
+  let left = 0;
+  let right = income;
+  const epsilon = 1; // Acceptable difference in rupees
+
+  while (left <= right) {
+    const mid = Math.floor((left + right) / 2);
+    const { tax: oldTax } = calculateOldRegimeTax(income, mid);
+    const { tax: newTax } = calculateNewRegimeTax(income);
+
+    if (Math.abs(oldTax - newTax) < epsilon) {
+      return mid;
+    }
+
+    if (oldTax > newTax) {
+      left = mid + 1;
+    } else {
+      right = mid - 1;
+    }
+  }
+
+  return left;
+}
+
+// Update break-even hint
+function updateBreakEvenHint(income) {
+  const breakEvenHint = document.getElementById('breakEvenHint');
+  const { tax: newTax } = calculateNewRegimeTax(income);
+  const { tax: oldTax } = calculateOldRegimeTax(income, 0);
+
+  if (newTax === 0 && oldTax === 0) {
+    breakEvenHint.innerHTML = '';
+    return;
+  }
+
+  if (newTax < oldTax) {
+    const breakEvenAmount = calculateBreakEvenDeductions(income);
+    if (breakEvenAmount > income) {
+      breakEvenHint.innerHTML = 'Old regime tax will always be higher for this income.';
+      return;
+    }
+    breakEvenHint.innerHTML = `💡 You need deductions of <span class="deduction-amount">₹${formatNumberWithCommas(breakEvenAmount)}</span> to have same tax in both regimes. Click to apply.`;
+    breakEvenHint.onclick = () => {
+      const deductionsInput = document.getElementById('deductions');
+      deductionsInput.value = formatNumberWithCommas(breakEvenAmount);
+      updateClearButton(deductionsInput);
+      calculateTax();
+    };
+  } else {
+    breakEvenHint.innerHTML = '';
+  }
+}
+
 // Add event listeners for input formatting
 document.addEventListener('DOMContentLoaded', function() {
   const incomeInput = document.getElementById('income');
   const deductionsInput = document.getElementById('deductions');
 
   incomeInput.addEventListener('input', function() {
-    formatInputValue(this);
-    checkIncomeThreshold();
+    handleIncomeChange(this);
   });
 
   deductionsInput.addEventListener('input', function() {
-    formatInputValue(this);
+    handleDeductionsChange(this);
   });
 }); 

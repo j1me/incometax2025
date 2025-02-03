@@ -11,17 +11,17 @@
 
   <!-- Open Graph / Facebook -->
   <meta property="og:type" content="website">
-  <meta property="og:url" content="https://github.com/j1me/incometax2025">
+  <meta property="og:url" content="https://indiaincometax.in">
   <meta property="og:title" content="Income Tax Calculator 2025-26 – Compare Old vs New Tax Regimes">
   <meta property="og:description" content="Calculate and compare your income tax under both old and new regimes for FY 2025-26. Get detailed breakdown and smart recommendations based on the latest budget.">
-  <meta property="og:image" content="https://raw.githubusercontent.com/j1me/incometax2025/main/tax-calculator-social.png">
+  <meta property="og:image" content="https://indiaincometax.in/tax-calculator-social.png">
 
   <!-- Twitter -->
   <meta property="twitter:card" content="summary_large_image">
-  <meta property="twitter:url" content="https://github.com/j1me/incometax2025">
+  <meta property="twitter:url" content="https://indiaincometax.in">
   <meta property="twitter:title" content="Income Tax Calculator 2025-26 – Compare Old vs New Tax Regimes">
   <meta property="twitter:description" content="Calculate and compare your income tax under both old and new regimes for FY 2025-26. Get detailed breakdown and smart recommendations based on the latest budget.">
-  <meta property="twitter:image" content="https://raw.githubusercontent.com/j1me/incometax2025/main/tax-calculator-social.png">
+  <meta property="twitter:image" content="https://indiaincometax.in/tax-calculator-social.png">
 
   <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500&display=swap" rel="stylesheet" />
   <style>
@@ -43,11 +43,12 @@
       box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
       margin-bottom: 30px;
       position: relative;
+      box-sizing: border-box;
     }
     .header-container {
       text-align: center;
       margin: -25px -25px 25px -25px;
-      padding: 25px 25px 20px;
+      padding: 20px 15px;
       border-bottom: 1px solid #eee;
       position: relative;
       background-color: #fff;
@@ -74,6 +75,9 @@
       align-items: center;
       justify-content: center;
       gap: 6px;
+      flex-wrap: wrap;
+      text-align: center;
+      line-height: 1.5;
     }
     .budget-badge {
       background-color: #e8f0fe;
@@ -82,6 +86,13 @@
       border-radius: 12px;
       font-size: 0.9em;
       font-weight: 500;
+      white-space: nowrap;
+      text-decoration: none;
+      transition: background-color 0.2s;
+    }
+    .budget-badge:hover {
+      background-color: #d2e3fc;
+      text-decoration: none;
     }
     p.intro {
       font-size: 0.95em;
@@ -129,12 +140,14 @@
       margin-bottom: 15px;
     }
     .regime-section {
-      margin-bottom: 20px;
+      margin-bottom: 30px;
     }
     .regime-title {
-      font-weight: 500;
+      font-size: 1.1em;
       color: #333;
-      margin-bottom: 10px;
+      margin-bottom: 15px;
+      padding-bottom: 8px;
+      border-bottom: 2px solid #e0e0e0;
     }
     .result p {
       font-size: 0.95em;
@@ -203,10 +216,55 @@
       transform: scale(0.98);
     }
 
-    /* Make the input container relative for proper spacing */
+    /* Input Clear Button Styles */
+    .input-wrapper {
+      position: relative;
+      width: 100%;
+      box-sizing: border-box;
+      display: flex;
+      align-items: center;
+    }
+
+    .input-wrapper input {
+      width: 100%;
+      box-sizing: border-box;
+      padding-right: 35px;
+      height: 40px;
+    }
+
+    .clear-input {
+      position: absolute;
+      right: 10px;
+      top: 0;
+      bottom: 0;
+      margin: auto;
+      background: none;
+      border: none;
+      padding: 4px;
+      cursor: pointer;
+      color: #999;
+      display: none;
+      width: 24px;
+      height: 24px;
+      font-size: 24px;
+      line-height: 1;
+      border-radius: 50%;
+      transition: all 0.2s ease;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .clear-input:hover {
+      color: #666;
+      background-color: #f0f0f0;
+    }
+
+    /* Update input container styles */
     .input-container {
       position: relative;
       margin-bottom: 15px;
+      width: 100%;
     }
 
     .input-container input {
@@ -221,47 +279,20 @@
 
     /* Tax Breakdown Styles */
     .breakdown-container {
-      margin-top: 15px;
-      font-size: 0.9em;
-    }
-
-    .breakdown-title {
-      font-weight: 500;
-      color: #333;
-      margin-bottom: 8px;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-    }
-
-    .breakdown-toggle {
-      background: none;
-      border: none;
-      color: #1a73e8;
-      cursor: pointer;
-      font-size: 0.9em;
-      padding: 0;
-      margin: 0;
-      display: flex;
-      align-items: center;
-      gap: 4px;
-    }
-
-    .breakdown-toggle:hover {
-      text-decoration: underline;
+      background-color: #f8f9fa;
+      border-radius: 8px;
+      padding: 15px;
+      border: 1px solid #e0e0e0;
     }
 
     .breakdown-details {
-      background-color: #f8f9fa;
-      border-radius: 4px;
-      padding: 12px;
-      margin-bottom: 12px;
+      font-size: 0.9em;
     }
 
     .breakdown-row {
       display: flex;
       justify-content: space-between;
-      margin-bottom: 6px;
+      margin-bottom: 8px;
       color: #555;
     }
 
@@ -269,8 +300,8 @@
       font-weight: 500;
       color: #333;
       border-top: 1px solid #e0e0e0;
-      margin-top: 8px;
-      padding-top: 8px;
+      margin-top: 12px;
+      padding-top: 12px;
     }
 
     .breakdown-row .label {
@@ -280,6 +311,7 @@
     .breakdown-row .amount {
       text-align: right;
       font-family: monospace;
+      margin-left: 15px;
     }
 
     .collapsed {
@@ -429,6 +461,43 @@
         width: 14px;
         height: 14px;
       }
+
+      .tagline {
+        font-size: 0.85em;
+        padding: 0 10px;
+      }
+
+      .budget-badge {
+        font-size: 0.85em;
+        padding: 2px 6px;
+      }
+
+      h1 {
+        font-size: 1.5em;
+        padding: 0 10px;
+      }
+
+      .tax-year {
+        font-size: 1em;
+      }
+
+      .regime-title {
+        font-size: 1em;
+      }
+
+      .breakdown-container {
+        padding: 12px;
+      }
+
+      .breakdown-row {
+        font-size: 0.9em;
+      }
+
+      .clear-input {
+        width: 24px;
+        height: 24px;
+        font-size: 24px;
+      }
     }
 
     /* Remove the share text class since we're not using it anymore */
@@ -444,13 +513,14 @@
       transform: translateX(-50%);
       background-color: #323232;
       color: white;
-      padding: 8px 16px;
+      padding: 12px 24px;
       border-radius: 4px;
-      font-size: 0.85em;
+      font-size: 0.9em;
       opacity: 0;
       transition: opacity 0.3s;
       pointer-events: none;
       z-index: 1001;
+      box-shadow: 0 2px 5px rgba(0,0,0,0.2);
     }
 
     .share-toast.show {
@@ -463,22 +533,340 @@
         padding-top: 20px;
       }
     }
+
+    /* Tax Summary Styles */
+    .tax-summary {
+      display: flex;
+      gap: 15px;
+      margin-bottom: 25px;
+      justify-content: space-between;
+    }
+
+    .tax-box {
+      flex: 1;
+      background-color: #f8f9fa;
+      border-radius: 8px;
+      padding: 15px;
+      text-align: center;
+      border: 1px solid #e0e0e0;
+      transition: all 0.3s ease;
+    }
+
+    .tax-box.highlighted {
+      background-color: #e8f5e9;
+      border-color: #4caf50;
+    }
+
+    .regime-label {
+      font-size: 0.9em;
+      color: #666;
+      margin-bottom: 8px;
+      font-weight: 500;
+    }
+
+    .tax-amount {
+      font-size: 1.4em;
+      font-weight: 500;
+      color: #333;
+    }
+
+    .tax-amount.better {
+      color: #2e7d32;
+    }
+
+    /* Update recommendation styles */
+    .recommendation {
+      text-align: center;
+      background-color: #f8f9fa;
+      padding: 12px;
+      border-radius: 6px;
+      margin: 0 0 25px 0;
+      border: 1px solid #e0e0e0;
+    }
+
+    .recommendation small {
+      display: block;
+      margin-top: 4px;
+      color: #666;
+    }
+
+    @media (max-width: 600px) {
+      .tax-summary {
+        flex-direction: column;
+        gap: 10px;
+      }
+
+      .tax-box {
+        padding: 12px;
+      }
+
+      .tax-amount {
+        font-size: 1.2em;
+      }
+    }
+
+    .tax-label {
+      font-size: 0.8em;
+      color: #666;
+      margin-bottom: 4px;
+    }
+
+    .effective-rate {
+      font-size: 0.9em;
+      color: #666;
+      margin-top: 8px;
+      padding-top: 8px;
+      border-top: 1px solid #e0e0e0;
+    }
+
+    .tax-box {
+      padding: 20px;
+    }
+
+    .tax-amount {
+      font-size: 1.6em;
+      font-weight: 600;
+      color: #333;
+    }
+
+    @media (max-width: 600px) {
+      .tax-amount {
+        font-size: 1.4em;
+      }
+    }
+
+    .break-even-hint {
+      font-size: 0.9em;
+      color: #1a73e8;
+      margin-top: 8px;
+      cursor: pointer;
+      transition: color 0.2s;
+    }
+
+    .break-even-hint:hover {
+      color: #1557b0;
+      text-decoration: underline;
+    }
+
+    .deduction-amount {
+      font-weight: 500;
+      color: #4caf50;
+    }
+
+    /* Share Menu Styles */
+    .share-menu {
+      position: fixed;
+      background-color: white;
+      border-radius: 8px;
+      box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+      padding: 8px 0;
+      display: none;
+      z-index: 1001;
+      width: 200px;
+    }
+
+    .share-menu.show {
+      display: block;
+    }
+
+    .share-menu-item {
+      padding: 8px 16px;
+      cursor: pointer;
+      white-space: nowrap;
+      color: #333;
+      font-size: 0.9em;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .share-menu-item:hover {
+      background-color: #f5f5f5;
+    }
+
+    .share-menu-item.disabled {
+      color: #999;
+      cursor: not-allowed;
+    }
+
+    .share-menu-item svg {
+      width: 16px;
+      height: 16px;
+      fill: currentColor;
+    }
+
+    /* Bottom Share Button */
+    .bottom-share {
+      display: flex;
+      justify-content: center;
+      gap: 10px;
+      margin-top: 20px;
+      padding-top: 20px;
+      border-top: 1px solid #eee;
+    }
+
+    .bottom-share-button {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      background-color: #1a73e8;
+      color: white;
+      border: none;
+      padding: 8px 16px;
+      border-radius: 4px;
+      cursor: pointer;
+      font-size: 0.9em;
+      transition: background-color 0.2s;
+    }
+
+    .bottom-share-button:hover {
+      background-color: #1557b0;
+    }
+
+    .bottom-share-button svg {
+      width: 16px;
+      height: 16px;
+      fill: currentColor;
+    }
+
+    .download-button {
+      background-color: #4caf50;
+    }
+
+    .download-button:hover {
+      background-color: #45a049;
+    }
+
+    @media (max-width: 600px) {
+      .bottom-share {
+        flex-direction: column;
+        align-items: center;
+      }
+
+      .bottom-share button {
+        width: 100%;
+      }
+    }
+
+    /* Side Buttons */
+    .side-buttons {
+      position: fixed;
+      top: 50%;
+      right: 0;
+      transform: translateY(-50%);
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      z-index: 1000;
+    }
+
+    .side-button {
+      background-color: #1a73e8;
+      color: white;
+      border: none;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 8px;
+      border-radius: 4px 0 0 4px;
+      box-shadow: -2px 2px 8px rgba(0, 0, 0, 0.1);
+      transition: all 0.2s ease;
+      width: 32px;
+      height: 32px;
+    }
+
+    .side-button:hover {
+      background-color: #1557b0;
+      width: 36px;
+    }
+
+    .side-button svg {
+      width: 16px;
+      height: 16px;
+      fill: currentColor;
+    }
+
+    /* Footer Styles */
+    .footer {
+      text-align: center;
+      padding: 20px;
+      color: #666;
+      font-size: 0.9em;
+      margin-top: 20px;
+    }
+
+    .footer a {
+      color: #1a73e8;
+      text-decoration: none;
+    }
+
+    .footer a:hover {
+      text-decoration: underline;
+    }
+
+    @media (max-width: 600px) {
+      .side-button {
+        width: 28px;
+        height: 28px;
+        padding: 6px;
+      }
+
+      .side-button:hover {
+        width: 32px;
+      }
+
+      .side-button svg {
+        width: 14px;
+        height: 14px;
+      }
+    }
+
+    /* Ensure all inputs use border-box */
+    * {
+      box-sizing: border-box;
+    }
   </style>
 </head>
 <body>
-  <!-- Add the share button outside the header container -->
-  <button onclick="sharePage()" class="share-button" title="Share calculator">
-    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
-      <path d="M18 16.08c-.76 0-1.44.3-1.96.77L8.91 12.7c.05-.23.09-.46.09-.7s-.04-.47-.09-.7l7.05-4.11c.54.5 1.25.81 2.04.81 1.66 0 3-1.34 3-3s-1.34-3-3-3-3 1.34-3 3c0 .24.04.47.09.7L8.04 9.81C7.5 9.31 6.79 9 6 9c-1.66 0-3 1.34-3 3s1.34 3 3 3c.79 0 1.5-.31 2.04-.81l7.12 4.16c-.05.21-.08.43-.08.65 0 1.61 1.31 2.92 2.92 2.92s2.92-1.31 2.92-2.92c0-1.61-1.31-2.92-2.92-2.92z"/>
-    </svg>
-  </button>
+  <!-- Side Buttons -->
+  <div class="side-buttons">
+    <button onclick="showShareMenu(event)" class="side-button" title="Share calculator">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+        <path d="M18 16.08c-.76 0-1.44.3-1.96.77L8.91 12.7c.05-.23.09-.46.09-.7s-.04-.47-.09-.7l7.05-4.11c.54.5 1.25.81 2.04.81 1.66 0 3-1.34 3-3s-1.34-3-3-3-3 1.34-3 3c0 .24.04.47.09.7L8.04 9.81C7.5 9.31 6.79 9 6 9c-1.66 0-3 1.34-3 3s1.34 3 3 3c.79 0 1.5-.31 2.04-.81l7.12 4.16c-.05.21-.08.43-.08.65 0 1.61 1.31 2.92 2.92 2.92s2.92-1.31 2.92-2.92c0-1.61-1.31-2.92-2.92-2.92z"/>
+      </svg>
+    </button>
+    <button onclick="downloadCalculation()" class="side-button" title="Download calculation">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+        <path d="M19 9h-4V3H9v6H5l7 7 7-7zM5 18v2h14v-2H5z"/>
+      </svg>
+    </button>
+  </div>
+
+  <!-- Share Menu -->
+  <div class="share-menu" id="shareMenu">
+    <div class="share-menu-item" onclick="shareCalculator(false)" id="shareBlankMenuItem">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+        <path d="M18 16.08c-.76 0-1.44.3-1.96.77L8.91 12.7c.05-.23.09-.46.09-.7s-.04-.47-.09-.7l7.05-4.11c.54.5 1.25.81 2.04.81 1.66 0 3-1.34 3-3s-1.34-3-3-3-3 1.34-3 3c0 .24.04.47.09.7L8.04 9.81C7.5 9.31 6.79 9 6 9c-1.66 0-3 1.34-3 3s1.34 3 3 3c.79 0 1.5-.31 2.04-.81l7.12 4.16c-.05.21-.08.43-.08.65 0 1.61 1.31 2.92 2.92 2.92s2.92-1.31 2.92-2.92c0-1.61-1.31-2.92-2.92-2.92z"/>
+      </svg>
+      Share Calculator
+    </div>
+    <div class="share-menu-item" onclick="shareCalculator(true)" id="shareWithValuesMenuItem">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+        <path d="M18 16.08c-.76 0-1.44.3-1.96.77L8.91 12.7c.05-.23.09-.46.09-.7s-.04-.47-.09-.7l7.05-4.11c.54.5 1.25.81 2.04.81 1.66 0 3-1.34 3-3s-1.34-3-3-3-3 1.34-3 3c0 .24.04.47.09.7L8.04 9.81C7.5 9.31 6.79 9 6 9c-1.66 0-3 1.34-3 3s1.34 3 3 3c.79 0 1.5-.31 2.04-.81l7.12 4.16c-.05.21-.08.43-.08.65 0 1.61 1.31 2.92 2.92 2.92s2.92-1.31 2.92-2.92c0-1.61-1.31-2.92-2.92-2.92z"/>
+      </svg>
+      Share with Current Values
+    </div>
+  </div>
 
   <div class="container">
     <div class="header-container">
       <div class="tax-year">Financial Year 2025-26</div>
       <h1>Income Tax Calculator</h1>
       <p class="tagline">
-        Based on <span class="budget-badge">Budget 2025</span> announced on Feb 1, 2025
+        <span>Based on</span>
+        <a href="https://www.indiabudget.gov.in/" target="_blank" class="budget-badge">Budget 2025</a>
+        <span>announced on Feb 1, 2025</span>
       </p>
     </div>
 
@@ -486,11 +874,14 @@
       Calculate and compare your tax liability under both the new and old regimes.
     </p>
     <!-- Annual Income Input -->
-    <form id="taxForm" onsubmit="event.preventDefault(); calculateTax();">
+    <form id="taxForm" onsubmit="event.preventDefault();">
       <div class="error" id="errorMsg" style="display: none;"></div>
       <div class="input-container">
         <label for="income">Annual Income (₹):</label>
-        <input type="text" id="income" placeholder="e.g., 15,00,000" oninput="checkIncomeThreshold()" required />
+        <div class="input-wrapper">
+          <input type="text" id="income" placeholder="e.g., 15,00,000" oninput="handleIncomeChange(this)" required />
+          <button type="button" class="clear-input" onclick="clearInput('income')" id="clearIncome" aria-label="Clear income">×</button>
+        </div>
         <!-- Quick Select Buttons (Scrollable) -->
         <div class="quick-select-container">
           <button type="button" class="quick-btn" onclick="setIncome(300000)">3L</button>
@@ -508,22 +899,43 @@
         </div>
       </div>
       
-      <!-- Deductions Container (Shown only if Annual Income is 12,00,000 or above) -->
+      <!-- Deductions Container -->
       <div id="deductionsContainer" style="display: none;">
         <label for="deductions">Total Deductions (₹):</label>
-        <input type="number" id="deductions" placeholder="e.g., 250000" required />
+        <div class="input-wrapper">
+          <input type="text" id="deductions" placeholder="e.g., 2,50,000" oninput="handleDeductionsChange(this)" required />
+          <button type="button" class="clear-input" onclick="clearInput('deductions')" id="clearDeductions" aria-label="Clear deductions">×</button>
+        </div>
         <p class="note" id="deductionNote">* Applicable only under the old tax regime.</p>
+        <p class="break-even-hint" id="breakEvenHint"></p>
       </div>
-      
-      <button type="button" onclick="calculateTax()">Calculate Tax</button>
     </form>
 
     <div id="result" class="result" style="display: none;">
+      <!-- New Tax Summary Section -->
+      <div class="tax-summary">
+        <div class="tax-box new-regime">
+          <div class="regime-label">New Regime</div>
+          <div class="tax-label">Tax Amount</div>
+          <div class="tax-amount" id="newRegimeTax"></div>
+          <div class="effective-rate" id="newRegimeRate"></div>
+        </div>
+        <div class="tax-box old-regime">
+          <div class="regime-label">Old Regime</div>
+          <div class="tax-label">Tax Amount</div>
+          <div class="tax-amount" id="oldRegimeTax"></div>
+          <div class="effective-rate" id="oldRegimeRate"></div>
+        </div>
+      </div>
+      
+      <!-- Recommendation right below tax boxes -->
+      <p class="recommendation" id="recommendation"></p>
+      
       <h2>Tax Liability Comparison</h2>
       
       <!-- New Regime Section -->
       <div class="regime-section">
-        <p id="newRegimeTax"></p>
+        <h3 class="regime-title">New Tax Regime Breakdown</h3>
         <div class="breakdown-container" id="newRegimeBreakdown">
           <div class="breakdown-details">
             <div id="newRegimeBreakdownDetails"></div>
@@ -533,19 +945,27 @@
 
       <!-- Old Regime Section -->
       <div class="regime-section">
-        <p id="oldRegimeTax"></p>
+        <h3 class="regime-title">Old Tax Regime Breakdown</h3>
         <div class="breakdown-container" id="oldRegimeBreakdown">
-          <div class="breakdown-title">
-            <button class="breakdown-toggle" onclick="toggleOldRegimeBreakdown()">
-              <span id="oldRegimeToggleText">Show breakdown</span>
-              <span id="oldRegimeToggleIcon">▼</span>
-            </button>
-          </div>
-          <div class="breakdown-details collapsed" id="oldRegimeBreakdownDetails"></div>
+          <div class="breakdown-details" id="oldRegimeBreakdownDetails"></div>
         </div>
       </div>
 
-      <p class="recommendation" id="recommendation"></p>
+      <!-- Bottom Share Button -->
+      <div class="bottom-share">
+        <button onclick="showShareMenu(event, true)" class="bottom-share-button">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+            <path d="M18 16.08c-.76 0-1.44.3-1.96.77L8.91 12.7c.05-.23.09-.46.09-.7s-.04-.47-.09-.7l7.05-4.11c.54.5 1.25.81 2.04.81 1.66 0 3-1.34 3-3s-1.34-3-3-3-3 1.34-3 3c0 .24.04.47.09.7L8.04 9.81C7.5 9.31 6.79 9 6 9c-1.66 0-3 1.34-3 3s1.34 3 3 3c.79 0 1.5-.31 2.04-.81l7.12 4.16c-.05.21-.08.43-.08.65 0 1.61 1.31 2.92 2.92 2.92s2.92-1.31 2.92-2.92c0-1.61-1.31-2.92-2.92-2.92z"/>
+          </svg>
+          Share These Results
+        </button>
+        <button onclick="downloadCalculation()" class="bottom-share-button download-button" style="display: none;">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+            <path d="M19 9h-4V3H9v6H5l7 7 7-7zM5 18v2h14v-2H5z"/>
+          </svg>
+          Download Calculation
+        </button>
+      </div>
     </div>
   </div>
 
@@ -625,7 +1045,22 @@
   <!-- Add toast notification div -->
   <div id="shareToast" class="share-toast">Link copied to clipboard!</div>
 
+  <!-- Add Footer -->
+  <div class="footer">
+    Generated by <a href="https://www.indiaincometax.in" target="_blank">www.indiaincometax.in</a>
+    <br>
+    Email <a href="mailto:jimmey.apps@gmail.com">jimmey.apps@gmail.com</a> for support
+    <br>
+    <span style="color: #666; font-size: 0.9em; margin-top: 8px; display: block;">All calculations are performed securely in your browser - no data is sent to any server.</span>
+  </div>
+
+  <!-- Add jsPDF library before closing body tag -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+  
+  <!-- Add tax calculator script -->
   <script src="tax-calculator.js"></script>
+
+  <!-- UI interaction scripts -->
   <script>
     function toggleAdditionalArticles() {
       const additionalArticles = document.getElementById('additionalArticles');
@@ -642,33 +1077,255 @@
       }
     }
 
-    async function sharePage() {
-      const shareData = {
-        title: 'Income Tax Calculator 2025-26',
-        text: 'Calculate and compare your income tax under both old and new regimes for FY 2025-26',
-        url: window.location.href
-      };
-
-      // Check if the Web Share API is supported (mainly mobile devices)
-      if (navigator.share) {
-        try {
-          await navigator.share(shareData);
-        } catch (err) {
-          console.log('Error sharing:', err);
-        }
+    function showShareMenu(event, isBottomButton = false) {
+      event.stopPropagation();
+      const shareMenu = document.getElementById('shareMenu');
+      const shareWithValuesMenuItem = document.getElementById('shareWithValuesMenuItem');
+      const button = event.target.closest('button');
+      const buttonRect = button.getBoundingClientRect();
+      
+      // Get current values
+      const income = document.getElementById('income').value;
+      const deductions = document.getElementById('deductions').value;
+      
+      // Enable/disable share with values option based on input
+      if (income) {
+        shareWithValuesMenuItem.classList.remove('disabled');
       } else {
-        // Fallback for desktop: Copy to clipboard
-        try {
-          await navigator.clipboard.writeText(window.location.href);
+        shareWithValuesMenuItem.classList.add('disabled');
+      }
+
+      // Calculate menu position
+      const menuHeight = 82; // Height of the menu with two options
+      const menuWidth = 200; // Approximate width of the menu
+      const buttonWidth = buttonRect.width;
+      const buttonCenter = buttonRect.left + (buttonWidth / 2);
+      const menuLeft = Math.max(10, Math.min(buttonCenter - (menuWidth / 2), window.innerWidth - menuWidth - 10));
+
+      // Position menu above the button
+      shareMenu.style.position = 'fixed';
+      shareMenu.style.bottom = `${window.innerHeight - buttonRect.top + 10}px`;
+      shareMenu.style.left = `${menuLeft}px`;
+      shareMenu.style.right = 'auto';
+      shareMenu.style.top = 'auto';
+      shareMenu.style.transform = 'none';
+
+      shareMenu.classList.add('show');
+    }
+
+    // Close share menu when clicking outside
+    document.addEventListener('click', function(event) {
+      const shareMenu = document.getElementById('shareMenu');
+      if (!event.target.closest('.share-menu') && !event.target.closest('.share-button') && !event.target.closest('.bottom-share-button')) {
+        shareMenu.classList.remove('show');
+      }
+    });
+
+    async function shareCalculator(includeValues = false) {
+      let url = window.location.href.split('?')[0];
+      
+      if (includeValues) {
+        const income = document.getElementById('income').value;
+        const deductions = document.getElementById('deductions').value;
+        
+        if (!income) return; // Don't share if no income entered
+        
+        const params = new URLSearchParams();
+        params.set('income', income.replace(/,/g, ''));
+        if (deductions) {
+          params.set('deductions', deductions.replace(/,/g, ''));
+        }
+        url = `${url}?${params.toString()}`;
+      }
+
+      try {
+        // Try to use the native share API (mobile devices)
+        if (navigator.share && /mobile|android|iphone|ipad/i.test(navigator.userAgent)) {
+          await navigator.share({
+            title: 'Income Tax Calculator 2025-26',
+            text: 'Calculate and compare your income tax under both old and new regimes for FY 2025-26',
+            url: url
+          });
+        } else {
+          // Desktop fallback: Copy to clipboard
+          await navigator.clipboard.writeText(url);
           const toast = document.getElementById('shareToast');
+          toast.textContent = 'Link copied to clipboard!';
           toast.classList.add('show');
           setTimeout(() => {
             toast.classList.remove('show');
           }, 2000);
-        } catch (err) {
-          console.log('Error copying to clipboard:', err);
+        }
+      } catch (err) {
+        console.log('Error sharing:', err);
+        // Fallback if clipboard API fails
+        try {
+          const textArea = document.createElement('textarea');
+          textArea.value = url;
+          document.body.appendChild(textArea);
+          textArea.select();
+          document.execCommand('copy');
+          document.body.removeChild(textArea);
+          
+          const toast = document.getElementById('shareToast');
+          toast.textContent = 'Link copied to clipboard!';
+          toast.classList.add('show');
+          setTimeout(() => {
+            toast.classList.remove('show');
+          }, 2000);
+        } catch (fallbackErr) {
+          console.log('Fallback error:', fallbackErr);
         }
       }
+
+      // Hide menu after sharing
+      document.getElementById('shareMenu').classList.remove('show');
+    }
+
+    // Check URL parameters on page load
+    window.addEventListener('DOMContentLoaded', function() {
+      const params = new URLSearchParams(window.location.search);
+      const income = params.get('income');
+      const deductions = params.get('deductions');
+      
+      if (income) {
+        document.getElementById('income').value = formatNumberWithCommas(income);
+        handleIncomeChange(document.getElementById('income'));
+        
+        if (deductions) {
+          document.getElementById('deductions').value = formatNumberWithCommas(deductions);
+          handleDeductionsChange(document.getElementById('deductions'));
+        }
+      }
+    });
+
+    function downloadCalculation() {
+      const income = document.getElementById('income').value;
+      const deductions = document.getElementById('deductions').value;
+      
+      if (!income) {
+        const toast = document.getElementById('shareToast');
+        toast.textContent = 'Please enter income to download calculation';
+        toast.classList.add('show');
+        setTimeout(() => {
+          toast.classList.remove('show');
+        }, 2000);
+        return;
+      }
+
+      // Get tax calculations
+      const { tax: taxNew, breakdown: breakdownNew } = calculateNewRegimeTax(parseNumberWithCommas(income));
+      const { tax: taxOld, breakdown: breakdownOld } = calculateOldRegimeTax(parseNumberWithCommas(income), parseNumberWithCommas(deductions || '0'));
+
+      // Create PDF
+      const { jsPDF } = window.jspdf;
+      const doc = new jsPDF();
+      
+      // Set font
+      doc.setFont("helvetica");
+      
+      // Add title
+      doc.setFontSize(16);
+      doc.text("Income Tax Calculation (FY 2025-26)", 15, 20);
+      
+      // Add website info
+      doc.setFontSize(10);
+      doc.text("Generated from www.indiaincometax.in", 15, 30);
+      
+      // Add basic info
+      doc.setFontSize(12);
+      doc.text(`Annual Income: ₹${income}`, 15, 45);
+      if (deductions) {
+        doc.text(`Total Deductions: ₹${deductions}`, 15, 55);
+      }
+
+      // Add tax comparison
+      doc.setFontSize(14);
+      doc.text("Tax Comparison", 15, 70);
+      doc.setFontSize(12);
+      doc.text(`New Regime Tax: ₹${formatNumberWithCommas(taxNew)}`, 15, 80);
+      doc.text(`Old Regime Tax: ₹${formatNumberWithCommas(taxOld)}`, 15, 90);
+
+      // Add recommendation
+      let recommendation = '';
+      if (taxNew < taxOld) {
+        recommendation = `Recommendation: Choose the New Tax Regime (Save ₹${formatNumberWithCommas(taxOld - taxNew)} annually)`;
+      } else if (taxOld < taxNew) {
+        recommendation = `Recommendation: Choose the Old Tax Regime (Save ₹${formatNumberWithCommas(taxNew - taxOld)} annually)`;
+      } else {
+        recommendation = "Note: Both tax regimes result in the same tax liability";
+      }
+      doc.text(recommendation, 15, 100);
+
+      // Add breakdowns
+      doc.setFontSize(14);
+      doc.text("New Regime Breakdown:", 15, 120);
+      let yPos = 130;
+      breakdownNew.forEach(item => {
+        doc.setFontSize(10);
+        doc.text(`${item.label}: ₹${formatNumberWithCommas(item.amount)}`, 20, yPos);
+        yPos += 8;
+      });
+
+      // Check if we need a new page for old regime breakdown
+      if (yPos > 250) {
+        doc.addPage();
+        yPos = 20;
+      }
+
+      doc.setFontSize(14);
+      doc.text("Old Regime Breakdown:", 15, yPos + 10);
+      yPos += 20;
+      breakdownOld.forEach(item => {
+        doc.setFontSize(10);
+        doc.text(`${item.label}: ₹${formatNumberWithCommas(item.amount)}`, 20, yPos);
+        yPos += 8;
+      });
+
+      // Add footer
+      doc.setFontSize(8);
+      const pageCount = doc.internal.getNumberOfPages();
+      for (let i = 1; i <= pageCount; i++) {
+        doc.setPage(i);
+        doc.text(
+          `Generated on ${new Date().toLocaleDateString()}`,
+          15,
+          doc.internal.pageSize.height - 10
+        );
+        doc.text(
+          `Page ${i} of ${pageCount}`,
+          doc.internal.pageSize.width - 30,
+          doc.internal.pageSize.height - 10
+        );
+      }
+
+      // Save the PDF
+      doc.save('tax-calculation.pdf');
+
+      // Show toast
+      const toast = document.getElementById('shareToast');
+      toast.textContent = 'Tax calculation downloaded as PDF!';
+      toast.classList.add('show');
+      setTimeout(() => {
+        toast.classList.remove('show');
+      }, 2000);
+    }
+
+    function clearInput(inputId) {
+      const input = document.getElementById(inputId);
+      input.value = '';
+      document.getElementById(`clear${inputId.charAt(0).toUpperCase() + inputId.slice(1)}`).style.display = 'none';
+      
+      if (inputId === 'income') {
+        handleIncomeChange(input);
+      } else {
+        handleDeductionsChange(input);
+      }
+    }
+
+    function updateClearButton(input) {
+      const clearButton = document.getElementById(`clear${input.id.charAt(0).toUpperCase() + input.id.slice(1)}`);
+      clearButton.style.display = input.value ? 'block' : 'none';
     }
   </script>
 </body>
